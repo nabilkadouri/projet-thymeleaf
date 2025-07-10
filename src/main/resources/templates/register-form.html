@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+
+<body>
+    <ul th:if="${errors}">
+        <li th:each="error : ${errors}">[[${error.field}]] [[${error.defaultMessage}]]</li>
+    </ul>
+    <form th:action="@{/register}" method="post" th:object="${dto}">
+        <label>Username
+            <input type="text" th:field="*{username}" required>
+        </label>
+        <label>Password
+            <input type="password" th:field="*{password}" required min="4" max="64">
+        </label>
+        <label>Repeat password
+            <input type="password" th:field="*{repeatPassword}" min="4" max="64" required>
+        </label>
+        <button>Register</button>
+    </form>
+</body>
+
+</html>
