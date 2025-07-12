@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+
 @Entity
 public class Product {
 
@@ -15,12 +16,14 @@ public class Product {
     private Double price;
     private String description;
     private Integer stock;
+
     public Product(String name, Double price, String description, Integer stock) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.stock = stock;
     }
+
     public Product(String id, String name, Double price, String description, Integer stock) {
         this.id = id;
         this.name = name;
@@ -28,8 +31,10 @@ public class Product {
         this.description = description;
         this.stock = stock;
     }
+
     public Product() {
     }
+
     @Override
     public int hashCode() {
         final int prime = 31;

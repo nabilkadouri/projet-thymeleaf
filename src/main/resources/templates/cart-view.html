@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Panier</title>
+</head>
+<body class="font-sans bg-gray-50 min-h-screen p-8">
+    <div class="max-w-3xl mx-auto bg-white p-6 shadow-xl rounded-lg">
+        <div>
+            <h1 class="text-3xl font-bold mb-8 text-gray-800 border-b pb-4"> Votre panier</h1>
+        </div>
+
+        <div th:if="${successMessage}" class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded">
+            <span th:text="${successMessage}"></span>
+        </div>
+        <div th:if="${errorMessage}" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded">
+            <span th:text="${errorMessage}"></span>
+        </div>
+        <div th:if="${infoMessage}" class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 mb-4 rounded">
+            <span th:text="${infoMessage}"></span>
+        </div>
+
+        <div th:if="${#lists.isEmpty(cartItems)}" class="text-center py-10 text-gray-600">
+            <p>Votre panier est vide</p>
+            <a href="/product" class="mt-4 inline-block text-blue-600 hover:text-blue-800 font-semibold">
+                Continuer vos achats
+            </a>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(cartItems)}">
+
+            <div class="space-y-4">
+                <div th:each="item : ${cartItems}" class="bg-gray-100 p-5 rounded-lg shadow-sm flex justify-between items-center">
+
+                    <div class="flex-1">
+                        <div class="text-xl font-semibold text-gray-900" th:text="${item.product.name}">Nom du produit</div>
+                        <div class="text-gray-600 text-sm mb-2" th:text="${item.product.description}">Description courte</div>
+
+                        <div class="text-sm text-gray-700">
+                            <span th:text="${item.quantity} + ' x ' + ${#numbers.formatDecimal(item.product.price, 0, 2)} + ' €'">1 x 9.99 €</span>
+                        </div>
+                    </div>
+
+                    <div class="flex-shrink-0 text-right ml-4">
+                        <div class="text-2xl font-bold text-gray-900 mb-2" th:text="${#numbers.formatDecimal(item.product.price * item.quantity, 0, 2)} + ' €'">9.99 €</div>
+
+                        <form th:action="@{/cart/remove}" method="post" class="flex items-center justify-end mb-2">
+                            <input type="hidden" name="productId" th:value="${item.product.id}" />
+
+                            <input type="number" name="quantity" th:value="${item.quantity}" min="1"
+                                   class="w-16 text-center border rounded-md p-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+                            <button type="submit"
+                                    class="ml-2 px-3 py-1 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 transition duration-200">
+                                Modifier
+                            </button>
+                        </form>
+
+                        <form th:action="@{/cart/delete}" method="post">
+                            <input type="hidden" name="productId" th:value="${item.product.id}" />
+                            <button type="submit"
+                                    class="text-red-600 hover:text-red-800 text-sm transition-colors duration-200">
+                                Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 pt-6 border-t border-gray-300 flex flex-col items-end">
+
+                <div class="text-4xl font-bold text-gray-900 mb-6">
+                    Total: <span th:text="${#numbers.formatDecimal(totalPrice, 0, 2)} + ' €'">0.00 €</span>
+                </div>
+
+                <div class="flex justify-between items-center w-full ">
+                    <div>
+                        <a href="/product" class="mt-4 inline-block text-white font-semibold px-6 py-3 bg-blue-600 hover:bg-blue-700 border border-gray-300 rounded-lg">
+                            Continuer vos achats
+                        </a>
+                    </div>
+                    <div class="flex space-x-4">
+                        <form th:action="@{/cart/clear}" method="post">
+                            <button type="submit"
+                                    class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
+                                Vider le panier
+                            </button>
+                        </form>
+
+                        <form th:action="@{/cart/validate}" method="post">
+                            <button type="submit"
+                                    class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700">
+                                Valider le panier
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>
